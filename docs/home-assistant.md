@@ -1,6 +1,6 @@
 # Home Assistant Examples
 
-These examples assume that [scripts/HA_automation.yaml](../scripts/HA_automation.yaml) has been run and that Home Assistant created entities from the MQTT discovery configuration. Replace the entity IDs and notification target with the names used by your installation.
+These examples assume that [software/HA_automation.yaml](../software/HA_automation.yaml) has been run and that Home Assistant created entities from the MQTT discovery configuration. Replace the entity IDs and notification target with the names used by your installation.
 
 ## Doorbell notification
 

@@ -9,9 +9,10 @@ HMD-DGB usage example with hardware and configuration for systems in my utility 
 ## Project Map
 
 - **Hardware and build:** [Hardware Design](#hardware-design), [Pinout & Wiring](#pinout--wiring), and [Assembly Instructions](#assembly-instructions)
-- **Wiring sources and diagrams:** [diagrams/](diagrams/)
+- **Wiring sources and diagrams:** [hardware/wiring/](hardware/wiring/), with generated output in [hardware/wiring/generated/](hardware/wiring/generated/)
 - **Assembly photos:** [images/](images/)
-- **Installation and Home Assistant configuration:** [scripts/](scripts/) and [docs/](docs/)
+- **Bill of materials:** [hardware/bom.csv](hardware/bom.csv)
+- **Installation and Home Assistant configuration:** [software/](software/) and [docs/](docs/)
 - **Release history:** [CHANGELOG.md](CHANGELOG.md)
 
 ## Overview
@@ -56,29 +57,41 @@ As the [HMD-DGB](https://github.com/jvanoosterhout/HMD-DGB) project matured, the
 
 ### Bill of Materials
 
-| Component | Details | Notes |
-|-----------|---------|-------|
-| Raspberry Pi Zero 2W** | Main controller | Single-core equivalent performance |
-| Waveshare USB Ethernet HUB HAT for Raspberry Pi Zero | GbE + USB connectivity | Required for non-PoE connection [link](https://www.kiwi-electronics.com/nl/poe-ethernet-usb-hub-hat-voor-rpi-zero-10711)|
-| Waveshare Aluminium Heatsink | Thermal management | For Pi Zero 2W [link](https://elektronicavoorjou.nl/product/heatsink-raspberry-pi-zero/)|
-| Optocoupler (2-channel | Isolation module | [link](https://www.tinytronics.nl/en/switches/optocouplers/optocoupler-isolation-module-2-channels) |
-| 100µF 35V Capacitor | Power conditioning | Added during assembly |
-| Uni siliciumdiode 1N4148 100V 100mA | Signal diode for doorbell | [link](https://www.conrad.nl/nl/p/diotec-ultrasnelle-si-diode-1n4148-sod-27-75-v-150-ma-162280.html) |
-| GX12-3 Connectors | Water sensors (×2) | [link](https://www.tinytronics.nl/en/cables-and-connectors/connectors/aviation-style/gx12/gx12-3-connector-set)|
-| GX12-4 Connector | Doorbell sensor + control | [link](https://www.tinytronics.nl/en/cables-and-connectors/connectors/aviation-style/gx12/gx12-4-connector-set)|
-| GX12-2 Connector | Ventilation fan (optional) | [link](https://www.tinytronics.nl/en/cables-and-connectors/connectors/aviation-style/gx12/gx12-2-connector-set)|
-| Panel Mount Ethernet extension cable | Ethernet | [link](https://www.kiwi-electronics.com/nl/panel-mount-ethernet-verlengkabel-2542) |
-| Delock Micro USB Connector | Power input | [link](https://www.reichelt.com/nl/nl/shop/product/usb_2_0-kabel_micro_b-bus_naar_micro_b-stekker_0_25_m-212024)|
-| Removable Screw Terminal - 2 Pin - 3.81 mm                                 |  | [link](https://www.tinytronics.nl/en/cables-and-connectors/connectors/screw-terminals/removable-screw-terminal-2p-3.81mm)|
-| YF-B6 Water Flow Sensor - Brass - G3/4"                                    |  | [link](https://www.tinytronics.nl/en/sensors/liquid/yf-b6-water-flow-sensor-brass-g3-4)|
-|BOX4U Industrial casing, 125 x 115 x 58 mm EAN 2050000000263| | [link](https://www.reichelt.com/nl/nl/shop/product/industriele_behuizing_125_x_115_x_58_mm_ip65_lichtgrijs-324314) |
-| Kradex Enclosure 176x126x57 mm - IP65 - Grey - Transparent - Z74JPH TM ABS |  |This one is used for the 3th version of the MKcontroler, for MK a square one was used|
-| 5V Relay Module 2-Channel High-Active or Low-Active                        |  | [link](https://www.tinytronics.nl/en/switches/relays/relay-modules/5v-relay-2-channel-high-active-or-low-active)|
-| Wago Clamps | Terminal connections | |
-|3 weg JST SM verlengkabel||[link](https://www.kiwi-electronics.com/nl/3-weg-jst-sm-verlengkabel-1-meter-1123)|
-| curtom laser cutted mounting plate |  | |
-| small piece of pcb prototyping board (e.g. 6 x 12 holes)| |
-| Jumper Cables, Heat Shrink, Masking Tape | Wiring & assembly | |
+The authoritative BOM is [hardware/bom.csv](hardware/bom.csv). The table below is generated from that file.
+
+<!-- BOM:START -->
+
+| Category | Component | Details | Qty | Status | Notes |
+|----------|-----------|---------|-----|--------|-------|
+| controller | Raspberry Pi Zero 2 W | Main controller | 1 | required | Single-board computer |
+| network | [Waveshare USB Ethernet HUB HAT for Raspberry Pi Zero](https://www.kiwi-electronics.com/nl/poe-ethernet-usb-hub-hat-voor-rpi-zero-10711) | Gigabit Ethernet and USB connectivity | 1 | required | Required for wired network connection |
+| thermal | [Waveshare aluminium heatsink](https://elektronicavoorjou.nl/product/heatsink-raspberry-pi-zero/) | Thermal management | 1 | required | For Raspberry Pi Zero 2 W |
+| isolation | [2-channel optocoupler module](https://www.tinytronics.nl/en/switches/optocouplers/optocoupler-isolation-module-2-channels) | Signal isolation | 1 | required | Doorbell sensor |
+| power | 100uF 35V capacitor | Power conditioning | 1 | required | Added during assembly |
+| protection | [1N4148 diode](https://www.conrad.nl/nl/p/diotec-ultrasnelle-si-diode-1n4148-sod-27-75-v-150-ma-162280.html) | Doorbell signal protection | 1 | required | 100V 100mA signal diode |
+| connector | [GX12-3 connector](https://www.tinytronics.nl/en/cables-and-connectors/connectors/aviation-style/gx12/gx12-3-connector-set) | Water sensor connection | 2 | required |  |
+| connector | [GX12-4 connector](https://www.tinytronics.nl/en/cables-and-connectors/connectors/aviation-style/gx12/gx12-4-connector-set) | Doorbell sensor and control connection | 1 | required |  |
+| connector | [GX12-2 connector](https://www.tinytronics.nl/en/cables-and-connectors/connectors/aviation-style/gx12/gx12-2-connector-set) | Optional ventilation fan connection | 1 | optional |  |
+| network | [Panel-mount Ethernet extension cable](https://www.kiwi-electronics.com/nl/panel-mount-ethernet-verlengkabel-2542) | Ethernet connection | 1 | required |  |
+| power | [Delock Micro USB connector](https://www.reichelt.com/nl/nl/shop/product/usb_2_0-kabel_micro_b-bus_naar_micro_b-stekker_0_25_m-212024) | Power input | 1 | required |  |
+| connector | [Removable screw terminal 2-pin 3.81mm](https://www.tinytronics.nl/en/cables-and-connectors/connectors/screw-terminals/removable-screw-terminal-2p-3.81mm) | Terminal connection | 1 | required |  |
+| sensor | [YF-B6 water flow sensor](https://www.tinytronics.nl/en/sensors/liquid/yf-b6-water-flow-sensor-brass-g3-4) | Water measurement | 1 | required | G3/4 inch |
+| enclosure | [BOX4U industrial enclosure](https://www.reichelt.com/nl/nl/shop/product/industriele_behuizing_125_x_115_x_58_mm_ip65_lichtgrijs-324314) | Enclosure | 1 | required | 125 x 115 x 58 mm IP65 |
+| enclosure | Kradex enclosure | Alternative enclosure | 1 | alternative | 176 x 126 x 57 mm IP65; used for an earlier version |
+| control | [5V 2-channel relay module](https://www.tinytronics.nl/en/switches/relays/relay-modules/5v-relay-2-channel-high-active-or-low-active) | Doorbell control | 1 | required | High-active or low-active variant |
+| assembly | Wago clamps | Terminal connections | as required | required |  |
+| connector | [3-way JST-SM extension cable](https://www.kiwi-electronics.com/nl/3-weg-jst-sm-verlengkabel-1-meter-1123) | Water sensor cable | 1 | required |  |
+| assembly | Laser-cut mounting plate | Internal mounting | 1 | required |  |
+| assembly | PCB prototyping board | Small wiring board | 1 | required | Approximately 6 x 12 holes |
+| assembly | Jumper cables heat shrink and masking tape | Wiring and assembly | as required | required |  |
+
+<!-- BOM:END -->
+
+Regenerate this table after changing the CSV with:
+
+```sh
+python3 software/generate-bom-table.py
+```
 
 
 ### Tools Required
@@ -107,13 +120,13 @@ As the [HMD-DGB](https://github.com/jvanoosterhout/HMD-DGB) project matured, the
 
 ### Door bell wiring
 
-![wiring_diagram_door_bell](diagrams/door-bell-wireviz.svg)
+![wiring_diagram_door_bell](hardware/wiring/generated/door-bell-wireviz.svg)
 ![external-connector](images/IMG_5989.jpeg)
 
 ### Water Sensors wiring
 
 Water 1 (Hard) & Water 2 (Soft - optional at GPIO24):
-![wiring_diagram_door_bell](diagrams/water-sensor-wireviz.svg)
+![wiring_diagram_door_bell](hardware/wiring/generated/water-sensor-wireviz.svg)
 
 ---
 
@@ -187,7 +200,7 @@ The installer targets Raspberry Pi OS Bookworm 32-bit and must be run on the Pi.
 ```sh
 git clone https://github.com/jvanoosterhout/MKcontroller.git
 cd MKcontroller
-sudo ./scripts/install_DGB_service.sh \
+sudo ./software/install.sh \
    --service-name mk_controller \
    --install-dir "$PWD" \
    --broker 192.0.2.10 \
@@ -201,7 +214,7 @@ sudo ./scripts/install_DGB_service.sh \
 Replace the example broker, username, and password with your own values. The installer accepts configuration through command-line options only and stores the settings in `/etc/mk_controller.env` with root-only permissions for systemd to load. Check the service with `sudo systemctl status mk_controller` and view logs with `sudo journalctl -u mk_controller`.
 
 ### Configuration
-Import or adapt the retained MQTT configuration in [scripts/HA_automation.yaml](scripts/HA_automation.yaml). It defines the doorbell and hard-water entities used by the examples in [docs/home-assistant.md](docs/home-assistant.md).
+Import or adapt the retained MQTT configuration in [software/HA_automation.yaml](software/HA_automation.yaml). It defines the doorbell and hard-water entities used by the examples in [docs/home-assistant.md](docs/home-assistant.md).
 
 ### Home Assistant Integration
 - Doorbell notification and auto-toggle examples: [docs/home-assistant.md](docs/home-assistant.md)
@@ -239,8 +252,8 @@ This is a personal home automation project shared as-is for educational purposes
 
 - [x] Add configuration file examples
 - [x] Add Home Assistant automation examples
-- [ ] Add wiring diagram/schematic
-- [ ] Add photos of assembled controller
+- [x] Add wiring diagram/schematic
+- [x] Add photos of assembled controller
 - [ ] Document temperature sensor integration (optional)
 - [ ] Document fan control logic (optional)
 - [ ] Add troubleshooting section

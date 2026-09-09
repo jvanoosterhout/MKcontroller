@@ -17,9 +17,13 @@ shift
 formats=("$@")
 [[ ${#formats[@]} -gt 0 ]] || formats=(svg)
 
-base="${src%.*}"
+source_dir="$(cd -- "$(dirname -- "$src")" && pwd)"
+source_file="$(basename -- "$src")"
+base="${source_file%.*}"
+out_dir="${source_dir}/generated"
+mkdir -p "$out_dir"
 for fmt in "${formats[@]}"; do
-    out="${base}.${fmt}"
+    out="${out_dir}/${base}.${fmt}"
     curl -fsS -X POST "${KROKI_URL}/wireviz/${fmt}" \
         -H 'Content-Type: text/plain' \
         --data-binary "@${src}" \
