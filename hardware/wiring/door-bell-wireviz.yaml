@@ -1,12 +1,12 @@
 connectors:
   PI Zero W2:
-    pins: [5V, GPIO26, GND, 3V3, GPIO25]
+    pins: [5V, GPIO26, GND, GPIO25]
 
   Relay:
     pins: [VCC, R0, GND, "NC_0", COM_0]
 
   Optocoupler:
-    pins: [OPT_PWR, OPT_V, OPT_IN, OPT_GND]
+    pins: [OPT_G, OPT_V, OPT_IN, OPT_GND]
 
   Rectifier:
     pins: [DC_POS, DC_GND, AC1, AC2]
@@ -19,24 +19,24 @@ connectors:
     pins: [1, 2, 3, 4]
 
   Bell_wires:
-    pins: [BELL_POS, BELL_NEG, From_bell_btn, To_bell_trafo]
+    pins: [BELL_POS, BELL_NEG, To_bell_trafo, From_bell_btn]
 
 cables:
   W_PI_RELAY:
     wirecount: 3
-    colors: [RD, YE, BK]
+    colors: [RD, GN, BK]
     show_name: False
     show_wirecount: False
 
   W_RELAY_GX12:
     wirecount: 2
-    colors: [OG, GN]
+    colors: [BK, BK]
     show_name: False
     show_wirecount: False
 
   W_GX12_RECT:
     wirecount: 2
-    colors: [BN, BU]
+    colors: [BK, BK]
     show_name: False
     show_wirecount: False
 
@@ -48,19 +48,19 @@ cables:
 
   W_OPTO_PI:
     wirecount: 2
-    colors: [RD, YE]
+    colors: [BN, WH]
     show_name: False
     show_wirecount: False
 
   W_UTP:
     wirecount: 4
-    colors: [OG, GN, BN, BU]
+    colors: [GN, OG, BU, BN]
     show_name: False
     show_wirecount: False
 
   W_TERMINAL_PASS:
     wirecount: 4
-    colors: [OG, GN, BN, BU]
+    colors: [BK, WH, BU, RD]
     show_name: False
     show_wirecount: False
 
@@ -94,26 +94,20 @@ connections:
     - W_OPTO_PI: 2
     - Optocoupler: OPT_V
 
-    
-
-
-  # Output-side ground
-  - - PI Zero W2: 3V3
+  - - PI Zero W2: GND
     - W_OPTO_PI: 1
-    - Optocoupler: OPT_PWR
+    - Optocoupler: OPT_G
 
-  # Four-wire UTP cable between casing and external connector
   - - GX12: [1, 2, 3, 4]
     - W_UTP: [1, 2, 3, 4]
-    - External_connector: [1, 3, 3, 4]
-
+    - External_connector: [1, 4, 3, 4]
 
   - - External_connector: [1, 2, 3, 4]
     - W_TERMINAL_PASS: [1, 2, 3, 4]
-    - Bell_wires: [BELL_POS, BELL_NEG, From_bell_btn,  To_bell_trafo]
+    - Bell_wires: [BELL_POS, BELL_NEG,  To_bell_trafo, From_bell_btn]
     
   - - External_connector: 2
-    - W_TERMINAL_PASS: 4
+    - W_TERMINAL_PASS: 3
     - Bell_wires: To_bell_trafo
 
 tweak:
@@ -161,4 +155,3 @@ tweak:
       shape: none
       fontsize: "1"
       fontcolor: white
-

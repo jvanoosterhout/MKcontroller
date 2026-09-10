@@ -1,10 +1,11 @@
 # MKcontroller
 
-HMD-DGB usage example with hardware and configuration for systems in my utility cupboard (Dutch: MeterKast → MK) as privately used.
+[HMD-DGB](https://github.com/jvanoosterhout/HMD-DGB) usage example with hardware and configuration to make dumb systems in my utility cupboard (Dutch: MeterKast → MK) smart and connect them to Home Assistant.
 
 ![Finished MKcontroller](images/IMG_5988.jpeg)
+![Door-bell-device](images/Door-bell-device.png)
 
-**Status:** Working personal build; hardware documentation and software setup are provided for adaptation and replication.
+**Status:** Working personal build, though still in progress; hardware documentation and software setup are provided for adaptation and replication.
 
 ## Project Map
 
@@ -17,17 +18,25 @@ HMD-DGB usage example with hardware and configuration for systems in my utility 
 
 ## Overview
 
-The **MKcontroller** is a Raspberry Pi Zero 2W-based controller designed to manage IoT devices and sensors in a home utility cupboard. This is my 4th Pi controller, developed in Q1 2026 as both a practical solution for household automation and a test platform for the [HMD-DGB](https://github.com/jvanoosterhout/HMD-DGB) project.
+The **MKcontroller** is a Raspberry Pi Zero 2 W-based controller designed to manage dumb devices and sensors in a home utility cupboard as smart IoT devices. This is my fourth Pi controller and the first to be documented like this. Its development started in Q1 2026 as both a practical solution for household automation and a test platform for the [HMD-DGB](https://github.com/jvanoosterhout/HMD-DGB) project.
 
 ### History & Motivation
 
-The desire to create this controller existed for a long time, but development began in Q1 2026 following the major update to my personal [HMD-DGB](https://github.com/jvanoosterhout/HMD-DGB) project. The primary objectives were straightforward but practical:
+The desire to create this controller existed for a long time, but development began in Q1 2026 following the major update to my [HMD-DGB](https://github.com/jvanoosterhout/HMD-DGB) project. The primary objectives were straightforward but practical:
 
 - **Monitor water consumption** to know when to refill the water softener with salt
-- **Detect doorbell activation** we frequently missed the bell while being in the garden
-- **Control doorbell** disable the physical ring while maintaining sensor capability for notifications
+- **Detect doorbell activation:** We frequently miss the bell while in the garden, and I do not want to invest in a commercial smart doorbell.
+- **Control the doorbell:** Disable the physical ring while maintaining sensor capability for notifications.
 
-As the [HMD-DGB](https://github.com/jvanoosterhout/HMD-DGB) project matured, the MKcontroller gained an additional critical role: serving as a **test system** for HMD-DGB releases. Other controllers (MV: mechanical ventilatie, BK: Bathroom lights and G: Garage door and garden irrigation, running the former [GPIOpinAPI](https://gitlab.com/jotd/gpiopinapi) or even older developments) manage essential household functions and couldn't risk crashes from experimental code. By mid-Q2 2026, the MKcontroller was operational with alpha releases of HMD-DGB v1.0.0, and this documentation now serves to share the design and allow others to replicate or adapt the concepts.
+A secondary objective arose when the [HMD-DGB](https://github.com/jvanoosterhout/HMD-DGB) project matured at the beginning of Q1 2026: serving as a **test system** for HMD-DGB releases. Other controllers (MV: mechanical ventilation, BK: bathroom lights, and G: garage door and garden irrigation, running the former [GPIOpinAPI](https://gitlab.com/jotd/gpiopinapi) or even older software) manage essential household functions and could not risk crashes from experimental code.
+
+In Q1, the Pi already served as a stand-alone test platform for pre-alpha releases. Its purpose was to test whether the principles of [HMD-DGB](https://github.com/jvanoosterhout/HMD-DGB) would work for multiple days in a row. It therefore ran successfully for more than 10 straight days with the [MQTT_duration_run](https://github.com/jvanoosterhout/HMD-DGB/blob/main/Examples/venv_MQTT_project/MQTT_duration_run.py) example.
+
+By mid-Q2 2026, the MKcontroller had reached a form ready for testing alpha releases of HMD-DGB v1.0.0.
+
+By the end of Q2, [HMD-DGB](https://github.com/jvanoosterhout/HMD-DGB) had reached the beta-release stage. During this testing period, I started documenting the project for my own traceability and to share the design so others can replicate or adapt the concepts.
+
+Note that not all wire colors are ideal. I try to reuse as many components as possible. As a result, the [doorbell wiring](#doorbell-wiring) uses an old UTP cable whose clips broke off. The [rectifier](#soldering) was added later using parts I had on hand, so I needed to cut the original wires. The optocoupler is cut into two pieces because I needed only one channel in this controller.
 
 ---
 
@@ -48,8 +57,8 @@ As the [HMD-DGB](https://github.com/jvanoosterhout/HMD-DGB) project matured, the
 ### Connectivity
 - Ethernet connection - utility cupboard has too much WiFi interference
 - Micro USB connection for power
-- GX12 connectors for sensors and actuators. Tried several alternatives (tulip, power, serial RS232), though they were to limited, cheap designed / fagile, or to big.
-- Extra cable with 3 way JST SM and GX12-3 connector for the water sensor. The sensor is equiped with a JST SM connector, which I could cut, though I found it more practical/reliable to leave the sensor as is.
+- GX12 connectors for sensors and actuators. I tried several alternatives (tulip, power, and serial RS232 connectors), though they were too limited, fragile, and/or large for practical use.
+- An extra cable with 3-way JST-SM and GX12-3 connectors for the water sensor. The sensor is equipped with a JST-SM connector, which I could cut, although I found it more practical and reliable to leave the sensor as is.
 
 ---
 
@@ -57,7 +66,7 @@ As the [HMD-DGB](https://github.com/jvanoosterhout/HMD-DGB) project matured, the
 
 ### Bill of Materials
 
-The authoritative BOM is [hardware/bom.csv](hardware/bom.csv). The table below is generated from that file.
+The BOM is stored in [hardware/bom.csv](hardware/bom.csv). The table below is generated from that file.
 
 <!-- BOM:START -->
 
@@ -101,7 +110,7 @@ python3 software/generate-bom-table.py
 - Soldering iron
 - Wire stripper (striptang)
 - Screwdrivers
-- Megger (for safety verification)
+- Digital multimeter (for safety verification)
 
 ---
 
@@ -109,7 +118,9 @@ python3 software/generate-bom-table.py
 
 ### GPIO Assignments
 
-| Function | GPIO | Notes |
+
+
+| Function | GPIO (BCM) | Notes |
 |----------|------|-------|
 | Doorbell Sensor | GPIO 25 | PinIn |
 | Doorbell Relay 0 | GPIO 26 | PinOut |
@@ -118,12 +129,17 @@ python3 software/generate-bom-table.py
 | Temperature Sensor | **[TBD]** | Optional onewire/I2C |
 | Fan Control | **[TBD]** | Optional PWM or relay |
 
-### Door bell wiring
+### Doorbell wiring
+
+The doorbell operates on an 8 V AC transformer that can deliver ... A/W. This makes the correct cable diameter important to prevent the wires from becoming too warm. I did not perform the exact calculation, but knowing that a UTP cable (I had one with broken connectors) can transfer 90 W at 57 V, meaning less than 2 A, and that only four wires are needed, I decided to solder the corresponding colored wires together. This should safely allow more than 3 A.
 
 ![wiring_diagram_door_bell](hardware/wiring/generated/door-bell-wireviz.svg)
+
+Note that the external connector is slightly unusual. It simplified assembly of the controller because I only had to work with four wires, two per sensor. The photo below shows the actual implementation of this connector. The BU/RD wires were originally connected directly to the doorbell and came from the transformer and button. I removed these wires from the bell and connected the WH/WH-BK wire to it instead. Reconnecting the BU/RD and WH/WH-BK wires would restore the original state.
+
 ![external-connector](images/IMG_5989.jpeg)
 
-### Water Sensors wiring
+### Water sensor wiring
 
 Water 1 (Hard) & Water 2 (Soft - optional at GPIO24):
 ![wiring_diagram_door_bell](hardware/wiring/generated/water-sensor-wireviz.svg)
@@ -135,11 +151,11 @@ Water 1 (Hard) & Water 2 (Soft - optional at GPIO24):
 ### Preparation
 1. **Prepare casing**
    - Cut internal edges away, these will otherwise trouble installing the connectors.
-   - Mark hole positions on the sides for connectors. Mind the hight of the cutom botom plate, connectors must fit clearly above the mounting plate.
+   - Mark hole positions on the sides for connectors. Mind the height of the custom bottom plate; connectors must fit clearly above the mounting plate.
    
 2. **Fabricate holes**
    - Drill 13mm holes for GX12 connectors
-   - Drill 3mm holes at the edges of the box drawen for the USB and Ethernet connector
+   - Drill 3mm holes at the edges of the box marked for the USB and Ethernet connectors
    - File edges and burrs smooth
 
 3. **Prepare wiring**
@@ -147,12 +163,12 @@ Water 1 (Hard) & Water 2 (Soft - optional at GPIO24):
    - Pre-tin connector pins and wires
 
 ### Soldering
-5. **Heat shrink preparation**
+4. **Heat-shrink preparation**
    - Slide (but do not shrink yet) heat shrink tubes over all wires that need isolation.
 
-4. **Solder components** (in this order)
-   - Pi GPIO headers to Pi Zero 2W
-   - wires to the GX12 connectors (don't forget to slide the covers on the wirebundle first)
+5. **Solder components** (in this order)
+   - Pi GPIO headers to the Pi Zero 2 W
+   - Wires to the GX12 connectors (do not forget to slide the covers onto the wire bundle first)
    - Diodes (bridge rectifier) + capacitor + wires to the PCB prototyping board
 ![rectifier](images/IMG_5341.jpeg)
 
@@ -162,8 +178,8 @@ Water 1 (Hard) & Water 2 (Soft - optional at GPIO24):
    - Connect all signal and power wires
 
 7. **Testing (before final sealing)**
-   - Verify with megger the correct end-to-end wiring (conductivity test)
-   - Verify with megger the correct between wire issolation (conductivity test)
+   - Verify the end-to-end wiring with a digital multimeter (continuity test)
+   - Verify the isolation between wires with a digital multimeter (continuity test)
    - **Better to catch mistakes now than after shrinking & sealing**
 
 ### Final Assembly
@@ -174,7 +190,7 @@ Water 1 (Hard) & Water 2 (Soft - optional at GPIO24):
 
 9. **Connect wiring**
    - Connect all external connectors to board
-   - Re-test with megger before shrinking
+   - Re-test with a digital multimeter before shrinking
 ![topview](images/IMG_5430.jpeg)
 ![inputs-outputs](images/IMG_5431.jpeg)
 ![network-power](images/IMG_5432.jpeg)
@@ -187,15 +203,15 @@ Water 1 (Hard) & Water 2 (Soft - optional at GPIO24):
 
 ---
 
-
-
 ## Software Setup
-Currently running:
-- bookworm 32 bit lite
-- HMD-DGB v1.0.0b4
+Prerequisites:
+- Home Assistant running
+- MQTT broker running
+- Raspberry Pi OS Bookworm 32-bit (lite)
+- Python 3.10, 3.11 or 3.12
 
 ### Installation
-The installer targets Raspberry Pi OS Bookworm 32-bit and must be run on the Pi. It installs HMD-DGB in a local virtual environment and creates a systemd service.
+The installer targets Bookworm OS and must be run on the Pi with Python 3.10, 3.11, or 3.12. It installs HMD-DGB v1.0.0b4 in a local virtual environment and creates a systemd service. I prefer to perform this setup over SSH.
 
 ```sh
 git clone https://github.com/jvanoosterhout/MKcontroller.git
@@ -214,10 +230,33 @@ sudo ./software/install.sh \
 Replace the example broker, username, and password with your own values. The installer accepts configuration through command-line options only and stores the settings in `/etc/mk_controller.env` with root-only permissions for systemd to load. Check the service with `sudo systemctl status mk_controller` and view logs with `sudo journalctl -u mk_controller`.
 
 ### Configuration
-Import or adapt the retained MQTT configuration in [software/HA_automation.yaml](software/HA_automation.yaml). It defines the doorbell and hard-water entities used by the examples in [docs/home-assistant.md](docs/home-assistant.md).
+After installation, import or adapt the retained MQTT configuration in [software/HA_automation.yaml](software/HA_automation.yaml). You can create a new automation, edit it in YAML mode, and then copy and paste the content from [software/HA_automation.yaml](software/HA_automation.yaml). It defines the doorbell and hard-water entities used by the examples in [docs/home-assistant.md](docs/home-assistant.md).
 
 ### Home Assistant Integration
-- Doorbell notification and auto-toggle examples: [docs/home-assistant.md](docs/home-assistant.md)
+Doorbell notification and auto-toggle examples (currently AI-generated and not tested): [docs/home-assistant.md](docs/home-assistant.md)
+
+### Update HMD-DGB
+In case you like to update the HMD-DGB software 
+- Login to the pi 
+- Activate the venv
+- Install the new version by replacing v1.0.0b4 with the desired one, or by removing @v1.0.0b4 entirely to get the latest commit. 
+
+   `pip install git+https://github.com/jvanoosterhout/HMD-DGB.git@v1.0.0b`
+- In Home Assistant, go to the service device and click `soft restart`.
+
+### Home Assistant interface 
+
+In Home Assistant, you will see the node and service devices:
+| Node      | service       |
+| -------------- | -------------- |
+|![node](images/DGB-node.png) | ![node](images/DGB-service.png) |
+
+The doorbell and water meter devices are also present:
+| Node      | service       |
+| -------------- | -------------- |
+|![node](images/Door-bell-device.png) | ![node](images/Water-meter.png) |
+
+
 
 ---
 
@@ -256,5 +295,3 @@ This is a personal home automation project shared as-is for educational purposes
 - [x] Add photos of assembled controller
 - [ ] Document temperature sensor integration (optional)
 - [ ] Document fan control logic (optional)
-- [ ] Add troubleshooting section
-- [ ] Add power consumption specs
