@@ -86,7 +86,6 @@ The BOM is stored in [hardware/bom.csv](hardware/bom.csv). The table below is ge
 | connector | [Removable screw terminal 2-pin 3.81mm](https://www.tinytronics.nl/en/cables-and-connectors/connectors/screw-terminals/removable-screw-terminal-2p-3.81mm) | Terminal connection | 1 | required |  |
 | sensor | [YF-B6 water flow sensor](https://www.tinytronics.nl/en/sensors/liquid/yf-b6-water-flow-sensor-brass-g3-4) | Water measurement | 1 | required | G3/4 inch |
 | enclosure | [BOX4U industrial enclosure](https://www.reichelt.com/nl/nl/shop/product/industriele_behuizing_125_x_115_x_58_mm_ip65_lichtgrijs-324314) | Enclosure | 1 | required | 125 x 115 x 58 mm IP65 |
-| enclosure | Kradex enclosure | Alternative enclosure | 1 | alternative | 176 x 126 x 57 mm IP65; used for an earlier version |
 | control | [5V 2-channel relay module](https://www.tinytronics.nl/en/switches/relays/relay-modules/5v-relay-2-channel-high-active-or-low-active) | Doorbell control | 1 | required | High-active or low-active variant |
 | assembly | Wago clamps | Terminal connections | as required | required |  |
 | connector | [3-way JST-SM extension cable](https://www.kiwi-electronics.com/nl/3-weg-jst-sm-verlengkabel-1-meter-1123) | Water sensor cable | 1 | required |  |
@@ -211,14 +210,13 @@ Prerequisites:
 - Python 3.10, 3.11 or 3.12
 
 ### Installation
-The installer targets Bookworm OS and must be run on the Pi with Python 3.10, 3.11, or 3.12. It installs HMD-DGB v1.0.0b4 in a local virtual environment and creates a systemd service. I prefer to perform this setup over SSH.
+Run the installer on the Raspberry Pi. It creates a local virtual environment, installs the current HMD-DGB version from GitHub, and creates and enables a systemd service. I recommend performing the setup over SSH.
 
 ```sh
 git clone https://github.com/jvanoosterhout/MKcontroller.git
 cd MKcontroller
 sudo ./software/install.sh \
    --service-name mk_controller \
-   --install-dir "$PWD" \
    --broker 192.0.2.10 \
    --port 1883 \
    --username mqtt_user \
@@ -227,13 +225,13 @@ sudo ./software/install.sh \
    --rate 300
 ```
 
-Replace the example broker, username, and password with your own values. The installer accepts configuration through command-line options only and stores the settings in `/etc/mk_controller.env` with root-only permissions for systemd to load. Check the service with `sudo systemctl status mk_controller` and view logs with `sudo journalctl -u mk_controller`.
+Replace the example broker, username, and password with your own values. The installer accepts configuration through command-line options only and stores the settings in `/etc/mk_controller.env` with root-only permissions for systemd to load. A python venv is placed by default in /opt/MVcontroller (or the name us chose), but this can be changed with the `--install-dir` option. Check the service with `sudo systemctl status mk_controller` and view logs with `sudo journalctl -u mk_controller`.
 
 ### Configuration
-After installation, import or adapt the retained MQTT configuration in [software/HA_automation.yaml](software/HA_automation.yaml). You can create a new automation, edit it in YAML mode, and then copy and paste the content from [software/HA_automation.yaml](software/HA_automation.yaml). It defines the doorbell and hard-water entities used by the examples in [docs/home-assistant.md](docs/home-assistant.md).
+After installation, import or adapt the retained MQTT configuration in [docs/home-assistant-automation-helpers.md](docs/home-assistant-automation-helpers.md). You can create a new automation, edit it in YAML mode, and then copy and paste the content from [docs/home-assistant-automation-helpers.md](software/home-assistant-automation-helpers.md). It defines the doorbell and hard-water entities used by the examples in [docs/home-assistant-DGB-config-automation.md](docs/home-assistant-DGB-config-automation.md).
 
 ### Home Assistant Integration
-Doorbell notification and auto-toggle examples (currently AI-generated and not tested): [docs/home-assistant.md](docs/home-assistant.md)
+Doorbell notification and auto-toggle examples (currently AI-generated and not tested): [docs/home-assistant-automation-helpers.md](docs/home-assistant-automation-helpers.md)
 
 ### Update HMD-DGB
 In case you like to update the HMD-DGB software 
@@ -273,6 +271,7 @@ This ensures that even if the Pi is completely offline, the doorbell remains fun
 
 ## Related Projects
 
+- **[DGB-systems](https://github.com/jvanoosterhout/DGB-systems)** - System-wide context, architecture, and design history
 - **[HMD-DGB](https://github.com/jvanoosterhout/HMD-DGB)** - Home automation control platform
 - **Other Controllers:**
   - MV (Mechanical Ventilation)

@@ -1,6 +1,6 @@
 # Home Assistant Examples
 
-These examples assume that [software/HA_automation.yaml](../software/HA_automation.yaml) has been run and that Home Assistant created entities from the MQTT discovery configuration. Replace the entity IDs and notification target with the names used by your installation.
+These examples assume that [docs/home-assistant-DGB-config-automation.md](../docs/home-assistant-DGB-config-automation.md) has been run and that Home Assistant created entities from the MQTT discovery configuration. Replace the entity IDs and notification target with the names used by your installation.
 
 ## Doorbell notification
 
@@ -23,6 +23,8 @@ mode: single
 
 This turns the doorbell off for two hours and then restores it. Replace the switch entity ID and notification target as needed.
 
+Create the `input_boolean.doorbell_silenced` helper in Home Assistant before using the second automation. Confirm the relay behavior locally before relying on automation for a safety or accessibility requirement.
+
 ```yaml
 alias: MK-controller - temporarily silence doorbell
 description: Silence the doorbell for two hours.
@@ -44,4 +46,3 @@ actions:
 mode: restart
 ```
 
-Create the `input_boolean.doorbell_silenced` helper in Home Assistant before using the second automation. Confirm the relay behavior locally before relying on automation for a safety or accessibility requirement.

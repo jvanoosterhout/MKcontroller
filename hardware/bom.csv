@@ -13,7 +13,6 @@ power,Delock Micro USB connector,Delock,,Power input,1,required,,https://www.rei
 connector,Removable screw terminal 2-pin 3.81mm,,,Terminal connection,1,required,,https://www.tinytronics.nl/en/cables-and-connectors/connectors/screw-terminals/removable-screw-terminal-2p-3.81mm
 sensor,YF-B6 water flow sensor,,,Water measurement,1,required,G3/4 inch,https://www.tinytronics.nl/en/sensors/liquid/yf-b6-water-flow-sensor-brass-g3-4
 enclosure,BOX4U industrial enclosure,,,Enclosure,1,required,125 x 115 x 58 mm IP65,https://www.reichelt.com/nl/nl/shop/product/industriele_behuizing_125_x_115_x_58_mm_ip65_lichtgrijs-324314
-enclosure,Kradex enclosure,Kradex,,Alternative enclosure,1,alternative,176 x 126 x 57 mm IP65; used for an earlier version,
 control,5V 2-channel relay module,,,Doorbell control,1,required,High-active or low-active variant,https://www.tinytronics.nl/en/switches/relays/relay-modules/5v-relay-2-channel-high-active-or-low-active
 assembly,Wago clamps,,,Terminal connections,as required,required,,
 connector,3-way JST-SM extension cable,,,Water sensor cable,1,required,,https://www.kiwi-electronics.com/nl/3-weg-jst-sm-verlengkabel-1-meter-1123
