@@ -21,7 +21,7 @@ actions:
     action: mqtt.publish
     metadata: {}
     data:
-      qos: "2"
+      qos: '2'
       retain: true
       topic: config/MK-controller/devices/deurbel
       payload: |
@@ -63,6 +63,7 @@ actions:
             {
               "PinInfo": {
                 "pin": 26,
+                "unique_id": "deurbel_uit_aan_relay_pin_26",
                 "ptype": "out",
                 "initial": 0,
                 "value": 1,
@@ -72,6 +73,7 @@ actions:
             {
               "PinInfo": {
                 "pin": 25,
+                "unique_id": "deurbel_sensor_pin_25",
                 "ptype": "in",
                 "pull_up": true
               }
@@ -80,7 +82,7 @@ actions:
           "state_initialization": {
             "persist_action": [
               {
-                "unique_id": "26",
+                "unique_id": "deurbel_uit_aan_relay_pin_26",
                 "call": ["set_state"]
               },
               {
@@ -98,7 +100,7 @@ actions:
                       {
                         "m": {
                           "$and": [
-                            {"unique_id": "25"},
+                            {"unique_id": "deurbel_sensor_pin_25"},
                             {"value": 1}
                           ]
                         }
@@ -116,7 +118,7 @@ actions:
                       {
                         "m": {
                           "$and": [
-                            {"unique_id": "25"},
+                            {"unique_id": "deurbel_sensor_pin_25"},
                             {"value": 0}
                           ]
                         }
@@ -148,7 +150,7 @@ actions:
                     ],
                     "run": {
                       "action": {
-                        "unique_id": "26",
+                        "unique_id": "deurbel_uit_aan_relay_pin_26",
                         "call": "on"
                       }
                     }
@@ -166,7 +168,7 @@ actions:
                     ],
                     "run": {
                       "action": {
-                        "unique_id": "26",
+                        "unique_id": "deurbel_uit_aan_relay_pin_26",
                         "call": "off"
                       }
                     }
@@ -180,7 +182,7 @@ actions:
     action: mqtt.publish
     metadata: {}
     data:
-      qos: "2"
+      qos: '2'
       retain: true
       topic: config/MK-controller/devices/water
       payload: |-
@@ -227,6 +229,7 @@ actions:
             {
               "PinInfo": {
                 "pin": 23,
+                "unique_id": "hard-water-stroom-pin-23",
                 "ptype": "count",
                 "pull_up": true,
                 "when_deactivated": false,
@@ -237,7 +240,11 @@ actions:
           "state_initialization": {
             "persist_action": [
               {
-                "unique_id": "23",
+                "unique_id": "hard-water-stroom-pin-23",
+                "call": ["set_state"]
+              },
+              {
+                "unique_id": "192-168-70-28-sensor-hard-water-volume",
                 "call": ["set_state"]
               }
             ]
@@ -251,7 +258,7 @@ actions:
                     "all": [
                       {
                         "m": {
-                          "unique_id": "23"
+                          "unique_id": "hard-water-stroom-pin-23"
                         }
                       }
                     ],

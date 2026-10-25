@@ -5,44 +5,63 @@ These examples assume that [docs/home-assistant-DGB-config-automation.md](../doc
 ## Doorbell notification
 
 ```yaml
-alias: MK-controller - doorbell notification
-description: Notify when the doorbell is pressed.
+alias: 'Huis: Deur bel bericht'
+description: Stuur bericht wanneer de deurbel gaat.
 triggers:
   - trigger: state
-    entity_id: binary_sensor.deurbel_detectie
-    to: "on"
+    entity_id:
+      - binary_sensor.deurbel_deurbel_detectie
+    to:
+      - 'on'
 actions:
-  - action: notify.mobile_app_your_phone
-    data:
-      title: Deurbel
-      message: Er is aangebeld.
+  - data:
+      title: Deurbel gaat
+      message: Er staat iemand voor de deur
+      data:
+        push:
+          sound:
+            name: default
+            critical: 1
+            volume: 0.3
+    action: notify.mobile_app_iphone_jeroen
 mode: single
 ```
 
 ## Temporarily silence the doorbell
 
-This turns the doorbell off for two hours and then restores it. Replace the switch entity ID and notification target as needed.
-
-Create the `input_boolean.doorbell_silenced` helper in Home Assistant before using the second automation. Confirm the relay behavior locally before relying on automation for a safety or accessibility requirement.
+This turns the doorbell off for two hours and then restores it. There is a backup that turns the bell on when Home Assistant shuts down. 
 
 ```yaml
-alias: MK-controller - temporarily silence doorbell
-description: Silence the doorbell for two hours.
+alias: Huis - Schakel deurbel tijdelijk uit
+description: Schakel de deurbel een aantal uur uit volgens nummer input
 triggers:
   - trigger: state
-    entity_id: input_boolean.doorbell_silenced
-    to: "on"
+    entity_id:
+      - switch.deurbel_deurbel_aan_uit
+    to:
+      - 'off'
+    id: uit
+  - trigger: homeassistant
+    event: shutdown
+    id: aan
+  - trigger: homeassistant
+    event: start
+    id: aan
 actions:
-  - action: switch.turn_off
-    target:
-      entity_id: switch.deurbel_aan_uit
-  - delay: "02:00:00"
+  - if:
+      - condition: trigger
+        id:
+          - uit
+    then:
+      - action: switch.turn_off
+        target:
+          entity_id: switch.deurbel_deurbel_aan_uit
+        data: {}
+      - delay: '02:00:00'
   - action: switch.turn_on
     target:
-      entity_id: switch.deurbel_aan_uit
-  - action: input_boolean.turn_off
-    target:
-      entity_id: input_boolean.doorbell_silenced
+      entity_id: switch.deurbel_deurbel_aan_uit
+    data: {}
 mode: restart
 ```
 

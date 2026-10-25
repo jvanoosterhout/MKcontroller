@@ -231,15 +231,15 @@ Replace the example broker, username, and password with your own values. The ins
 After installation, import or adapt the retained MQTT configuration in [docs/home-assistant-automation-helpers.md](docs/home-assistant-automation-helpers.md). You can create a new automation, edit it in YAML mode, and then copy and paste the content from [docs/home-assistant-automation-helpers.md](software/home-assistant-automation-helpers.md). It defines the doorbell and hard-water entities used by the examples in [docs/home-assistant-DGB-config-automation.md](docs/home-assistant-DGB-config-automation.md).
 
 ### Home Assistant Integration
-Doorbell notification and auto-toggle examples (currently AI-generated and not tested): [docs/home-assistant-automation-helpers.md](docs/home-assistant-automation-helpers.md)
+Doorbell notification and two hour silencing examples: [docs/home-assistant-automation-helpers.md](docs/home-assistant-automation-helpers.md)
 
 ### Update HMD-DGB
 In case you like to update the HMD-DGB software 
 - Login to the pi 
-- Activate the venv
-- Install the new version by replacing v1.0.0b4 with the desired one, or by removing @v1.0.0b4 entirely to get the latest commit. 
+- Activate the venv (located in /opt/MVcontroller or /opt/,your controller name>)
+- Install the new version by replacing v1.0.0 with the desired one, or by removing @v1.0.0 entirely to get the latest commit. 
 
-   `pip install git+https://github.com/jvanoosterhout/HMD-DGB.git@v1.0.0b`
+   `pip install git+https://github.com/jvanoosterhout/HMD-DGB.git@v1.0.0
 - In Home Assistant, go to the service device and click `soft restart`.
 
 ### Home Assistant interface 
@@ -271,12 +271,14 @@ This ensures that even if the Pi is completely offline, the doorbell remains fun
 
 ## Related Projects
 
-- **[DGB-systems](https://github.com/jvanoosterhout/DGB-systems)** - System-wide context, architecture, and design history
-- **[HMD-DGB](https://github.com/jvanoosterhout/HMD-DGB)** - Home automation control platform
-- **Other Controllers:**
-  - MV (Mechanical Ventilation)
-  - BK (Bathroom Lights, in Dutch: BadKamer → BK)
-  - G (Garage Door & Garden Irrigation)
+| Project | Role |
+| --- | --- |
+| [DGB-systems](https://github.com/jvanoosterhout/DGB-systems) | System-wide context, architecture, and design history | 
+| [HMD-DGB](https://github.com/jvanoosterhout/HMD-DGB) | Generic software package that can bind Raspberry Pi GPIO and Home Assistant device. |
+| [MKcontroller](https://github.com/jvanoosterhout/MKcontroller) | Utility-cupboard controller, including doorbell and water-meter use cases. |
+| [Gcontroller](https://github.com/jvanoosterhout/Gcontroller) | Garage-door and garden-irrigation controller use cases. |
+| [MVcontroller](https://github.com/jvanoosterhout/MVcontroller) | Mechanical-ventilation controller use cases; current hardware documentation is incomplete. |
+| BKcontroller | Bathroom Lights, not documented yet | 
 
 ---
 
